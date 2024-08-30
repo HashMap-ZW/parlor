@@ -13,7 +13,7 @@ export class SidebarComponent implements OnInit {
   navLinks = [
     {
       name: 'Dashboard',
-      link: ' ',
+      link: 'dashboard',
     },
     {
       name: 'Payments',
