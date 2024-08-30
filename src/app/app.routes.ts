@@ -9,7 +9,7 @@ export const routes: Routes = [
     component: AuthComponent,
   },
   {
-    path: '',
+    path: 'admin',
     component: LayoutComponent,
     children: [
       {
@@ -18,4 +18,9 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'auth',
+  }
 ];

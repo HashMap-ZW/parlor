@@ -21,7 +21,7 @@ export class AuthComponent implements OnInit {
   ngOnInit(): void { }
 
   submit(){
-    this.authService.goToRoute('dashboard');
+    this.authService.goToRoute('admin/dashboard');
   }
 
 }
