@@ -15,7 +15,7 @@ align-items: center;
             <div class="login-logo">
               <a> Welcome to Parlor  </a>
             </div>
-            <form  (ngSubmit)="submit()">
+            <form>
               <div class="input-group mb-3">
                 <input type="email" class="form-control" placeholder="Email">
                 <div class="input-group-append">
@@ -36,7 +36,7 @@ align-items: center;
 
                 <!-- /.col -->
                 <div class="col">
-                  <button type="submit" class="btn btn-primary btn-block rounded-pill">Sign In</button>
+                  <button type="submit" (click)="submit()" class="btn btn-primary btn-block rounded-pill">Sign In</button>
                 </div>
                 <!-- /.col -->
               </div>
