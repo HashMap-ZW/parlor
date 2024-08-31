@@ -20,8 +20,18 @@ export class SidebarComponent implements OnInit {
       link: 'policies',
     },
     {
+      name: 'Clients',
+      link: 'clients',
+    },
+
+    {
       name: 'Payments',
       link: 'payments',
+    },
+
+    {
+      name: 'Inventory',
+      link: 'inventory',
     },
     {
       name: 'Users',
