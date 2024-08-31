@@ -1,0 +1,5 @@
+---
+- name: Install .NET Runtime
+  apt:
+    name: aspnetcore-runtime-8.0
+    state: present

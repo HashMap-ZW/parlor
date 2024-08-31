@@ -1,0 +1,8 @@
+[parlor]
+
+[parlor:vars]
+ansible_user=
+sudo_user=ubuntu
+repo_folder=/home/ubuntu/parlor
+repo_name=parlor
+repo_branch=main

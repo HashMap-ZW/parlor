@@ -1,0 +1,52 @@
+---
+- name: Make sure we have a 'prime' group
+  group:
+    name: prime
+    state: present
+
+- name: Allow 'prime' group to have passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: "^%prime"
+    line: "%prime ALL=(ALL) NOPASSWD: ALL"
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Create a regular user with sudo priviledges
+  user:
+    name: "{{sudo_user}}"
+    state: present
+    groups: prime
+    append: true
+    create_home: true
+    shell: /bin/bash
+
+- name: Set authorised keys for remote users
+  authorized_key:
+    user: "{{ sudo_user }}"
+    key: "{{ item.key }}"
+    comment: "{{ item.name }}"
+    state: "{{ item.state }}"
+  loop: "{{ users }}"
+
+- name: Disallow password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+  register: disallow_pw
+
+- name: Disallow root SSH access
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+  register: disallow_root_ssh
+
+- name: Restart sshd
+  service:
+    name: sshd
+    state: restarted
+  when: disallow_pw.changed or disallow_root_ssh.changed
