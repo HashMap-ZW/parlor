@@ -40,7 +40,7 @@ namespace Parlor.API.Controllers
             return CreatedAtAction(nameof(GetClient), new { id = newClient.Id }, newClient);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateClient(int id, ClientRegistration client)
         {
             if (id != client.Id)
