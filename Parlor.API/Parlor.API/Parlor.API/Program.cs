@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Parlor.API.Models;
+using Parlor.API.Models.Repository;
+using Parlor.API.Models.Repository.IRepository;
+using Parlor.API.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IClientRegistrationRepository, ClientRegistrationRepository>();
+builder.Services.AddScoped<ClientRegistrationService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
