@@ -5,6 +5,8 @@ namespace Parlor.API.Models;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<OtpCode> OtpCodes { get; set; }
     public required DbSet<ClientRegistration> ClientRegistrations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -15,4 +17,3 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
           .HasKey(c => c.Id);
     }
 }
-
