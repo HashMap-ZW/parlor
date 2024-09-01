@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Parlor.API.Models.Data;
 using Parlor.API.Models.Local;
@@ -52,18 +51,18 @@ public class AccountController(IAccountRepository repository) : ControllerBase
     //    return Ok(result);
     //}
 
-    //[HttpPost("login")]
-    //[ProducesResponseType(typeof(Result<Account>), StatusCodes.Status200OK)]
-    //[ProducesResponseType(typeof(Result<Account>), StatusCodes.Status403Forbidden)]
-    //public async Task<IActionResult> Login([FromBody] LoginRequest request)
-    //{
-    //    var result = await _unitOfWork.Account.LoginAsync(request);
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(Result<Account>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<Account>), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        var result = await _repository.LoginAsync(request);
 
-    //    if (!result.Success)
-    //        return StatusCode(StatusCodes.Status403Forbidden, result);
+        if (!result.Success)
+            return StatusCode(StatusCodes.Status403Forbidden, result);
 
-    //    return Ok(result);
-    //}
+        return Ok(result);
+    }
 
     //[HttpGet]
     //[Authorize(Roles = "SUPERADMIN")]

@@ -30,10 +30,22 @@ public class AccountRepository(AppDbContext context, IConfiguration configuratio
     //    throw new NotImplementedException();
     //}
 
-    //public Task<Result<Account>> LoginAsync(LoginRequest request)
-    //{
-    //    throw new NotImplementedException();
-    //}
+    public async Task<Result<Account>> LoginAsync(LoginRequest request)
+    {
+        var account = await _context.Accounts!
+                .Where(x => x.Email == request.UserName || x.UserName == request.UserName)
+                .FirstOrDefaultAsync();
+
+        if (account == null || _passwordService.VerifyHash(request.Password!, account!.Password!) == false)
+            return new Result<Account>(false, "Username or password is incorrect!");
+
+        if (account.IsActive is false) return new Result<Account>(false, "Please verify your account!");
+
+        account.Token = await _jwtService.GenerateTokenAsync(account);
+        account.Password = "*************";
+
+        return new Result<Account>(account);
+    }
 
     //public Task<Result<string>> ResendOtpAsync(string email)
     //{
