@@ -6,6 +6,7 @@ using Parlor.API.Models;
 using Parlor.API.Models.Repository;
 using Parlor.API.Models.Repository.IRepository;
 using Parlor.API.Services;
+using Parlor.API.Services.IServices;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IClientRegistrationRepository, ClientRegistrationRepository>();
+
 builder.Services.AddScoped<ClientRegistrationService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
