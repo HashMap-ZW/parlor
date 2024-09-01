@@ -19,12 +19,13 @@ public class JwtService(IConfiguration configuration) : IJwtService
         {
             Subject = new ClaimsIdentity(
             [
-                    new ("Id", account.Id.ToString()),
+                    new("Id", account.Id.ToString()),
                     new(ClaimTypes.Email, account.Email!),
+                    new("UserName", account.UserName!),
                     new(ClaimTypes.Role, account.Role.ToString()!)
             ]),
 
-            Expires = DateTime.Now.AddHours(8),
+            Expires = DateTime.Now.AddHours(2),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
