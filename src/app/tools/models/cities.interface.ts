@@ -1,0 +1,31 @@
+const cities = [
+  'Harare',
+  'Masvingo',
+  'Bulawayo',
+  'Chitungwiza',
+  'Mutare',
+  'Gweru',
+  'Nkayi',
+  'Kwekwe',
+  'Norton',
+  'Kadoma',
+  'Chegutu',
+  'Chinhoyi', // Fixed: Added quotes around the city name
+  'Marondera',
+  'Sakubva',
+  'Bindura',
+  'Hwange',
+  'Beitbridge',
+  'Chiredzi',
+  'Rusape',
+  'Zvishavane',
+  'Chipinge',
+  'Karoi',
+  'Victoria Falls',
+  'Redcliff',
+  'Mukumbura',
+  'Gwanda',
+  'Lupane',
+];
+
+export default cities;
