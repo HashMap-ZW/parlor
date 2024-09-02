@@ -1,0 +1,8 @@
+---
+- name: Gather facts Only
+  hosts: parlor
+  gather_facts: true
+  tasks:
+    - name: Display gathered facts
+      debug:
+        var: ansible_facts
