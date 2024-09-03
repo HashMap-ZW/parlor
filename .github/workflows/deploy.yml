@@ -29,12 +29,10 @@ jobs:
         run: npm run build --if-present
         working-directory: ./frontend
 
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /home/ubuntu/parlor_app/frontend
-            ls
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/ed_25519
+          chmod 600 ~/.ssh/ed_25519
+          ssh-keyscan -t ed25519 ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          echo ~/.ssh/ed_25519.pub
