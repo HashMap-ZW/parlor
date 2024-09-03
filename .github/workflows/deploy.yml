@@ -47,7 +47,7 @@ jobs:
 
       - name: Deploy Angular Application
         run: |
-          ssh devserver 'cd ~/parlor_app/frontend && nvm use 20.17.0 && npm run build --if-present'
+          ssh devserver 'cd ~/parlor_app/frontend && npm run build --if-present'
           ssh devserver 'sudo rm -rf /var/www/html/*'
           ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html'
           ssh devserver 'sudo systemctl nginx -s reload'
