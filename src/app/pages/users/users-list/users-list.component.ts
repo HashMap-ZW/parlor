@@ -1,14 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UserDto, isUserDTOValid } from '../../../../_models/user-dto';
+import { UserService } from '../../../../_services/user.service';
 
-interface UserDto {
-  name: string;
-  username: string;
-  email: string;
-  role: string;
-  createdOn: string;
-}
+
 
 @Component({
   selector: 'app-users-list',
@@ -23,28 +19,29 @@ interface UserDto {
 export class UsersListComponent implements OnInit {
   users: UserDto[] = [
     {
-      name: 'John Doe', email: 'john@example.com', role: 'Admin',
-      username: '',
-      createdOn: ''
-    },
-    {
-      name: 'Jane Smith', email: 'jane@example.com', role: 'User',
-      username: '',
-      createdOn: ''
+      firstName: 'John Doe',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      phoneNumber: 'Admin',
+      userName: '',
+      password: ''
     },
   ];
 
-  newUser: UserDto = {
-    name: '', email: '', role: '',
-    username: '',
-    createdOn: ''
-  };
+  newUser: UserDto = {} as UserDto;
 
   editIndex: number | null = null; // To track if editing
 
+  constructor(
+    private userService: UserService
+  ) { }
+
+  ngOnInit(): void { }
+
   addUser() {
-    if (this.newUser.name && this.newUser.email && this.newUser.role) {
+    if (isUserDTOValid(this.newUser)) {
       this.users.push({ ...this.newUser });
+      this.userService.createUser(this.newUser);
       this.resetForm();
     }
   }
@@ -74,6 +71,6 @@ export class UsersListComponent implements OnInit {
     this.resetForm();
   }
 
-  ngOnInit(): void { }
+
 
 }

@@ -11,18 +11,22 @@
             <!-- /.card-header -->
             <div class="card-body">
               <form (submit)="addUser()" class="form-inline">
-                <input type="text" [(ngModel)]="newUser.name" name="name" placeholder="Name" class="form-control mr-2"
-                  required />
+                <input type="text" [(ngModel)]="newUser.firstName" name="name" placeholder="Firstname"
+                  class="form-control mr-2" required />
+                <input type="text" [(ngModel)]="newUser.lastName" name="lastname" placeholder="Lastname"
+                  class="form-control mr-2" required />
+                <input type="text" [(ngModel)]="newUser.userName" name="username" placeholder="Username"
+                  class="form-control mr-2" required />
                 <input type="text" [(ngModel)]="newUser.email" name="email" placeholder="Email"
                   class="form-control mr-2" required />
-                <input type="text" [(ngModel)]="newUser.role" name="role" placeholder="Role" class="form-control mr-2"
-                  required />
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="button" class="btn btn-secondary ml-2" (click)="resetForm()">Reset</button>
-                
+                <input type="text" [(ngModel)]="newUser.phoneNumber" name="role" placeholder="Role"
+                  class="form-control mr-2" required />
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary ml-2" (click)="resetForm()">Reset</button>
+
               </form>
 
-              
+
             </div>
             <!-- /.card-body -->
           </div>
@@ -49,21 +53,23 @@
               <table class="table table-bordered table-hover mt-3">
                 <thead>
                   <tr>
-                    <th>Fullname</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Role</th>
-                    <th>Created On</th>
+                    <th>phoneNumber</th>
+                    <!-- <th>Created On</th> -->
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let user of users; let i = index">
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.username }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.userName }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.role }}</td>
-                    <td>{{ user.createdOn }}</td>
+                    <td>{{ user.phoneNumber }}</td>
+                    <!-- <td>{{ user.createdOn }}</td> -->
                     <td>
                       <i class="fas fa-edit text-primary mr-2" (click)="editUser(i)" title="Edit"></i>
                       <i class="fas fa-trash text-danger" (click)="deleteUser(i)" title="Delete"></i>
