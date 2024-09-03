@@ -47,7 +47,7 @@ jobs:
 
       - name: Deploy Angular Application
         run: |
-          ssh devserver 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 18 && nvm use 20'
+
           ssh devserver 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && cd ~/parlor_app/frontend && npm install && npm run build --if-present'
           ssh devserver 'sudo rm -rf /var/www/html/*'
           ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html'
