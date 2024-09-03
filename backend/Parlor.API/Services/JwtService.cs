@@ -17,13 +17,13 @@ public class JwtService(IConfiguration configuration) : IJwtService
         var key = Encoding.ASCII.GetBytes(_configuration["JwtService:Secret"]!);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(
-            [
-                    new("Id", account.Id.ToString()),
-                    new(ClaimTypes.Email, account.Email!),
-                    new("UserName", account.UserName!),
-                    new(ClaimTypes.Role, account.Role.ToString()!)
-            ]),
+            Subject = new ClaimsIdentity(new List<Claim>
+        {
+            new("Id", account.Id.ToString()),
+            new(ClaimTypes.Email, account.Email!),
+            new("UserName", account.UserName!),
+            new(ClaimTypes.Role, account.Role.ToString()!)
+        }),
 
             Expires = DateTime.Now.AddHours(2),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
