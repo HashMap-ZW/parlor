@@ -10,41 +10,58 @@ public class PasswordService : IPasswordService
 
     public static string Hash(string password, int iterations)
     {
-        byte[] salt;
-        new RNGCryptoServiceProvider().GetBytes(salt = new byte[SaltSize]);
+        // Generate a salt using RandomNumberGenerator
+        byte[] salt = new byte[SaltSize];
+        RandomNumberGenerator.Fill(salt);
 
-        var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
-        var hash = pbkdf2.GetBytes(HashSize);
+        // Derive the hash using the new Rfc2898DeriveBytes constructor
+        byte[] hash;
+        using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+        {
+            hash = pbkdf2.GetBytes(HashSize);
+        }
 
-        var hashBytes = new byte[SaltSize + HashSize];
+        // Combine salt and hash
+        byte[] hashBytes = new byte[SaltSize + HashSize];
         Array.Copy(salt, 0, hashBytes, 0, SaltSize);
         Array.Copy(hash, 0, hashBytes, SaltSize, HashSize);
 
-        var base64Hash = Convert.ToBase64String(hashBytes);
+        // Convert the combined salt and hash to a base64 string
+        string base64Hash = Convert.ToBase64String(hashBytes);
 
-        return string.Format("$ju!137$V1${0}${1}", iterations, base64Hash);
+        // Return the formatted hash string
+        return $"$ju!137$V1${iterations}${base64Hash}";
     }
 
     public bool VerifyHash(string password, string hashedPassword)
     {
+        // Split the hashed password to extract iterations and the base64 hash
         var splittedHashString = hashedPassword.Replace("$ju!137$V1$", "").Split('$');
         var iterations = int.Parse(splittedHashString[0]);
         var base64Hash = splittedHashString[1];
 
+        // Convert the base64 string back to bytes
         var hashBytes = Convert.FromBase64String(base64Hash);
 
+        // Extract the salt from the hashBytes array
         var salt = new byte[SaltSize];
         Array.Copy(hashBytes, 0, salt, 0, SaltSize);
 
-        var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
-        byte[] hash = pbkdf2.GetBytes(HashSize);
-
-        for (var i = 0; i < HashSize; i++)
+        // Derive the hash using the password and extracted salt
+        byte[] computedHash;
+        using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
         {
-            if (hashBytes[i + SaltSize] != hash[i]) return false;
+            computedHash = pbkdf2.GetBytes(HashSize);
         }
 
-        return true;
+        // Compare the computed hash with the stored hash
+        for (var i = 0; i < HashSize; i++)
+        {
+            if (hashBytes[i + SaltSize] != computedHash[i])
+                return false; // Hashes don't match
+        }
+
+        return true; // Hashes match
     }
 
     public string HashPassword(string password)
