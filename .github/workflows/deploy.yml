@@ -35,4 +35,12 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/ed_25519
           chmod 600 ~/.ssh/ed_25519
           ssh-keyscan -t ed25519 ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-          echo ~/.ssh/ed_25519.pub
+          cat >>~/.ssh/config <<END
+          Host devserver
+            HostName ${{ secrets.HOST }}
+            User ${{ secrets.USER }}
+            IdentityFile ~/.ssh/ed_25519
+          END
+
+      - name: Checkout the latest source code
+        run: ssh devserver 'cd ~/parlor_app && git fetch && git reset --hard origin/main'
