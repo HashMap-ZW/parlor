@@ -44,3 +44,10 @@ jobs:
 
       - name: Checkout the latest source code
         run: ssh devserver 'cd ~/parlor_app && git fetch && git reset --hard origin/main'
+
+      - name: Deploy Angular Application
+        run: |
+          ssh devserver 'cd ~/parlor_app/frontend npm run build --if-present'
+          ssh devserver 'sudo rm -rf /var/www/html/*'
+          ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html'
+          ssh devserver 'sudo systemctl nginx -s reload'
