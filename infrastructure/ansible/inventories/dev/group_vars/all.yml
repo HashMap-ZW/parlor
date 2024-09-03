@@ -1,0 +1,5 @@
+---
+users:
+  - name: terrameijar@gmail.com
+    state: present
+    key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfZy/4/jgnRXnXui/RcRy2fPZCr93PylXZPmQcP1jCx
