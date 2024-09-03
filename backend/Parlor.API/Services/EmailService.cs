@@ -13,8 +13,8 @@ public class EmailService(IConfiguration configuration) : IEmailService
     {
         MailMessage emailMessage = new()
         {
-            Sender = new MailAddress(_configuration["EmailService:UserName"], _configuration["EmailService:DisplayName"]),
-            From = new MailAddress(_configuration["EmailService:Address"], _configuration["EmailService:DisplayName"]),
+            Sender = new MailAddress(_configuration["EmailService:UserName"]!, _configuration["EmailService:DisplayName"]),
+            From = new MailAddress(_configuration["EmailService:Address"]!, _configuration["EmailService:DisplayName"]),
             IsBodyHtml = true,
             Subject = email.Subject,
             Body = email.Body,
@@ -23,7 +23,7 @@ public class EmailService(IConfiguration configuration) : IEmailService
 
         emailMessage.To.Add(email.To!);
 
-        using SmtpClient mailClient = new(_configuration["EmailService:Host"], int.Parse(_configuration["EmailService:Port"].ToString()));
+        using SmtpClient mailClient = new(_configuration["EmailService:Host"], int.Parse(_configuration["EmailService:Port"]!.ToString()));
         mailClient.Credentials = new NetworkCredential(_configuration["EmailService:Address"], _configuration["EmailService:Password"]);
         mailClient.EnableSsl = true;
 
@@ -32,7 +32,7 @@ public class EmailService(IConfiguration configuration) : IEmailService
             mailClient.Send(emailMessage);
             return Task.FromResult(new Result<bool>(true));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return Task.FromResult(new Result<bool>(false));
         }
