@@ -14,23 +14,20 @@ export class ClientRegistrationService {
     private router: Router) { }
 
 
-  getClientById(id: number) {
-    return this.apis.get(`/clientregistrations/${id}`);
+  addClient(client: ClientRegistration) {
+    return this.apis.post('/addClient', client);
   }
 
-  addClient(client: ClientRegistration) {
-    return this.apis.post('/clientregistrations', client);
+  getClientById(id: number) {
+    return this.apis.get(`/getClientById/${id}`);
   }
 
   updateClient(client: ClientRegistration) {
-    return this.apis.put(`/clientregistrations/${client.id}`, client);
+    return this.apis.put(`/updateClient/${client.id}`, client);
   }
 
   deleteClient(id: number) {
-    return this.apis.delete(`/clientregistrations/${id}`);
+    return this.apis.delete(`/deleteClient/${id}`);
   }
 
-  getClientsList() {
-    return this.clientsList.asObservable();
-  }
 }
