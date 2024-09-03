@@ -32,8 +32,8 @@ jobs:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.HOST }}
-          username: ${{ env.SSH_USERNAME }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/ubuntu/parlor_app/frontend
