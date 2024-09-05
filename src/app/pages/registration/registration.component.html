@@ -87,16 +87,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let client of clients; let i = index">
+                                    <tr *ngFor="let client of allClients; let i = index">
                                         <td>{{ i + 1 }}</td>
-                                        <td>{{ newClient.fullName }}</td>
-                                        <td>{{ newClient.nationalID }}</td>
-                                        <td>{{ newClient.mobileNumber }}</td>
-                                        <td>{{ newClient.physicalAddress }}</td>
-                                        <td>{{ newClient.dateCreated }}</td>
+                                        <td>{{ client.fullName }}</td>
+                                        <td>{{ client.nationalID }}</td>
+                                        <td>{{ client.mobileNumber }}</td>
+                                        <td>{{ client.physicalAddress }}</td>
+                                        <td>{{ client.dateCreated }}</td>
+
                                         <td>
-                                            <button class="btn btn-warning"
-                                                (click)="updateClient(client)">Update</button>
+                                            <button class="btn btn-warning" (click)="updateClient(client)"
+                                                style="margin-right: 20px;">Edit</button>
                                             <button class="btn btn-danger"
                                                 (click)="deleteClient(client.id)">Delete</button>
                                         </td>
