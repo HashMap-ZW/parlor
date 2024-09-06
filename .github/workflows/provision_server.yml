@@ -21,6 +21,7 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
+          mkdir -p ~/.ssh/
           cd infrastructure/ansible
           ssh-keygen -R ${{ secrets.HOST }}
           ssh-keyscan -t ecdsa, ed25519-H ${{ secrets.HOST }} >> ~/.ssh/known_hosts 2>&1
