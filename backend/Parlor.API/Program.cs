@@ -17,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IClientRegistrationRepository, ClientRegistrationRepository>();
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 
 builder.Services.AddScoped<ClientRegistrationService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
