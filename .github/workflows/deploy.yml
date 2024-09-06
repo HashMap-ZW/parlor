@@ -56,17 +56,15 @@ jobs:
         with:
           name: frontend_assets
 
+      - name: Checkout the latest source code
+        run: ssh devserver 'cd ~/parlor_app && git fetch && git reset --hard origin/main'
+
       - name: Copy build artifact to VPS
         run: scp frontend_assets.tar.gz devserver:~/parlor_app/frontend/dist
-
-      # - name: Checkout the latest source code
-      #   run: ssh devserver 'cd ~/parlor_app && git fetch && git reset --hard origin/main'
-
-      #   - name: Transfer build artifact to VPS
-      #     run: scp -o StrictHostKeyChecking=no frontend_assets.tar.gz devserver:~/parlor_app/frontend/dist
 
       - name: Deploy Angular Application
         run: |
           ssh devserver 'cd ~/parlor_app/frontend/dist && tar -xzf frontend_assets.tar.gz'
-          ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/* /var/www/html/parlor_cd_test'
-          ssh devserver 'sudo systemctl nginx -s reload'
+
+          ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/* /var/www/html/parlor_cd_test'
+          ssh devserver 'sudo nginx -s reload'
