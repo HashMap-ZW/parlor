@@ -9,6 +9,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<OtpCode> OtpCodes { get; set; }
     public required DbSet<ClientRegistration> ClientRegistrations { get; set; }
 
+    public DbSet<Inventory> Inventories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

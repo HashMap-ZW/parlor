@@ -46,7 +46,7 @@ namespace Parlor.API.Controllers
             if (id != client.Id)
             {
                 return BadRequest();
-            }
+            } 
             await _clientRegistrationService.UpdateClient(client);
             return NoContent();
         }
