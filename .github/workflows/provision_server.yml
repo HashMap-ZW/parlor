@@ -22,4 +22,6 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           cd infrastructure/ansible
+          ssh-kegen -R ${{ secrets.HOST }}
+          ssh-keyscan -t ecdsa, ed25519-H ${{ secrets.HOST }} >> ~/.ssh/known_hosts 2>&1
           ansible-playbook setup.yml
