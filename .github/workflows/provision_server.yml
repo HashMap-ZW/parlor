@@ -1,34 +1,25 @@
 name: Manual Workflow Trigger
 
-on:
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: "Log level"
-        required: true
-        default: "warning"
-        type: choice
-        options:
-          - info
-          - warning
-          - debug
-      tags:
-        description: "Test scenario tags"
-        required: false
-        type: boolean
-      environment:
-        description: "Environment to run tests against"
-        type: environment
-        required: true
+on: workflow_dispatch
 jobs:
-  log-the-outputs:
+  provision-server:
     runs-on: ubuntu-latest
+
     steps:
-      - run: |
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
-          echo "Environment: $ENVIRONMENT"
-        env:
-          LEVEL: ${{ inputs.logLevel}}
-          TAGS: ${{ inputs.tags}}
-          ENVIRONMENT: ${{ inputs.environment}}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+
+      - name: Run Ansible Playbook
+        run: |
+          cd infrastructure/ansible
+          ansible-playbook setup.yml
