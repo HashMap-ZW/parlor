@@ -29,6 +29,15 @@ jobs:
         run: npm run build --if-present
         working-directory: ./frontend
 
+      - name: Archive build artifact
+        run: tar -czf frontend_assets.tar.gz -C ./frontend/dist/parlor-fe/browser .
+
+      - name: Store artifact to copy to VPS
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend_assets
+          path: frontend_assets.tar.gz
+
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh/
@@ -42,13 +51,22 @@ jobs:
             IdentityFile ~/.ssh/ed_25519
           END
 
-      - name: Checkout the latest source code
-        run: ssh devserver 'cd ~/parlor_app && git fetch && git reset --hard origin/main'
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend_assets
+
+      - name: Copy build artifact to VPS
+        run: scp frontend_assets.tar.gz devserver:~/parlor_app/frontend/dist
+
+      # - name: Checkout the latest source code
+      #   run: ssh devserver 'cd ~/parlor_app && git fetch && git reset --hard origin/main'
+
+      #   - name: Transfer build artifact to VPS
+      #     run: scp -o StrictHostKeyChecking=no frontend_assets.tar.gz devserver:~/parlor_app/frontend/dist
 
       - name: Deploy Angular Application
         run: |
-
-          ssh devserver 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && cd ~/parlor_app/frontend && npm install && npm run build --if-present'
-          ssh devserver 'sudo rm -rf /var/www/html/*'
-          ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html'
+          ssh devserver 'cd ~/parlor_app/frontend/dist && tar -xzf frontend_assets.tar.gz'
+          ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/* /var/www/html/parlor_cd_test'
           ssh devserver 'sudo systemctl nginx -s reload'
