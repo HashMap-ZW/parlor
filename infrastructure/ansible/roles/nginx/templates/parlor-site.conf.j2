@@ -1,0 +1,23 @@
+server {
+        listen 80;
+        server_name {{ server_name }};
+
+        root /var/www/html/parlor;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        error_page 404 /index.html;
+
+        location ~* \.(?:manifest|appcache|html?|xml|json)$ {
+            expires -1;
+        }
+
+        location ~* \.(?:css|js|woff|woff2|ttf|otf|eot|ico|svg|jpg|jpeg|png|gif|map)$ {
+            expires 1w;
+            access_log off;
+            add_header Cache-Control "public";
+        }
+}

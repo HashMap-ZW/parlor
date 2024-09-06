@@ -66,5 +66,5 @@ jobs:
         run: |
           ssh devserver 'cd ~/parlor_app/frontend/dist && tar -xzf frontend_assets.tar.gz'
 
-          ssh devserver 'sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html/parlor_cd_test'
+          ssh devserver 'sudo rm -r /var/www/html/parlor/* && sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html/parlor/'
           ssh devserver 'sudo nginx -s reload'
