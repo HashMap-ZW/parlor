@@ -12,6 +12,11 @@
     - nginx
 
   tasks:
+    - name: Ensure the Web root exists
+      file:
+        path: "{{ nginx_web_root }}"
+        state: directory
+
     - name: Copy Angular build files to Nginx web root
       copy:
         src: "{{ angular_build_dir }}"
