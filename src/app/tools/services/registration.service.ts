@@ -25,8 +25,10 @@ export class ClientRegistrationService {
     return this.apis.get(`/ClientRegistration/${id}`);
   }
 
+
   updateClient(client: ClientRegistration) {
-    return this.apis.put(`/ClientRegistration/${client.id}`, client);
+    const url = `/ClientRegistration?id=${client.id}`;
+    return this.apis.put(url, client);
   }
 
   deleteClient(id: number) {

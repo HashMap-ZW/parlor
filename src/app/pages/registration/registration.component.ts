@@ -16,7 +16,12 @@ import { ClientRegistrationService } from '../../tools/services/registration.ser
 })
 export class RegistrationComponent {
   clients: ClientRegistration[] = [];
+
   allClients: ClientRegistration[] = [];
+
+  selectedClient: ClientRegistration;
+
+  editModal = false;
 
   newClient: ClientRegistration = {
     id: 0,
@@ -56,19 +61,33 @@ export class RegistrationComponent {
       });
   }
 
-  updateClient(client: ClientRegistration) {
-    this.clientRegistrationService.updateClient(client).subscribe(() => {
-      const index = this.clients.findIndex(c => c.id === client.id);
-      if (index !== -1) {
-        this.clients[index] = client;
-      }
-    });
+  editClient(client: ClientRegistration) {
+    console.log('Editing client:', client);
+    this.selectedClient = { ...client };
+    this.editModal = true;
   }
 
+  updateClient() {
+    if (this.selectedClient) {
+      this.clientRegistrationService.updateClient(this.selectedClient)
+        .subscribe({
+          next: () => {
+            //  updatting the allClients variable
+            this.allClients = this.allClients.map(client =>
+              client.id === this.selectedClient!.id ? { ...this.selectedClient! } : client
+            );
+            this.editModal = false;
+            this.selectedClient = null;
+          },
+          error: (err) => {
+            console.error('Error during client update:', err);
+          }
+        });
+    }
+  }
   deleteClient(id: number) {
     this.clientRegistrationService.deleteClient(id).subscribe({
       next: () => {
-
         this.getClients();
       },
       error: (err) => {
