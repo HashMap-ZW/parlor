@@ -8,9 +8,3 @@
   apt:
     name: "{{sys_packages}}"
     state: "present"
-
-- name: Install Angular CLI globally
-  npm:
-    name: "@angular/cli"
-    global: yes
-    state: present
