@@ -1,0 +1,25 @@
+---
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Create Docker volume for MSSQL
+  docker_volume:
+    name: msql_data
+    state: present
+
+- name: Deploy MSSQL container
+  docker_container:
+    name: sql-server
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    state: started
+    restart_policy: always
+    ports:
+      - "1433:1433"
+    env:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Wiggle nephew@123" # TODO: Change this to a secure password
+    volumes:
+      - msql_data:/var/opt/mssql
