@@ -1,0 +1,30 @@
+name: Build project
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ">=18.19.1"
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build Project
+        run: npm run build --if-present
+        working-directory: ./frontend

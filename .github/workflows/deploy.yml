@@ -1,0 +1,70 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ">=18.19.1"
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build Project
+        run: npm run build --if-present
+        working-directory: ./frontend
+
+      - name: Archive build artifact
+        run: tar -czf frontend_assets.tar.gz -C ./frontend/dist/parlor-fe/browser .
+
+      - name: Store artifact to copy to VPS
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend_assets
+          path: frontend_assets.tar.gz
+
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/ed_25519
+          chmod 600 ~/.ssh/ed_25519
+          ssh-keyscan -t ed25519 ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          cat >>~/.ssh/config <<END
+          Host devserver
+            HostName ${{ secrets.HOST }}
+            User ${{ secrets.USER }}
+            IdentityFile ~/.ssh/ed_25519
+          END
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend_assets
+
+      - name: Checkout the latest source code
+        run: ssh devserver 'cd ~/parlor_app && git fetch && git reset --hard origin/main'
+
+      - name: Copy build artifact to VPS
+        run: scp frontend_assets.tar.gz devserver:~/parlor_app/frontend/dist
+
+      - name: Deploy Angular Application
+        run: |
+          ssh devserver 'cd ~/parlor_app/frontend/dist && tar -xzf frontend_assets.tar.gz'
+
+          ssh devserver 'sudo rm -r /var/www/html/parlor/* || true && sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html/parlor/'
+          ssh devserver 'sudo nginx -s reload'

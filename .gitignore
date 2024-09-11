@@ -320,3 +320,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Ignore Angular cache files
+frontend/.angular/cache/

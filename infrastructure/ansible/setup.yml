@@ -26,3 +26,10 @@
     - docker
     - dotnet
     - mssql
+    - nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: reloaded
