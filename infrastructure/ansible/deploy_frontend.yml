@@ -1,0 +1,51 @@
+---
+- name: Deploy Angular Application with Nginx
+  hosts: parlor
+  become: true
+  vars:
+    angular_build_dir: "/home/{{ sudo_user }}/parlor_app/frontend/dist/parlor-fe/browser/"
+    nginx_web_root: "/var/www/html/parlor"
+    nginx_site_config: "/etc/nginx/sites-available/parlor-app.conf"
+    server_name: 18.202.177.31
+
+  roles:
+    - nginx
+
+  tasks:
+    - name: Ensure the Web root exists
+      file:
+        path: "{{ nginx_web_root }}"
+        state: directory
+
+    - name: Copy Angular build files to Nginx web root
+      copy:
+        src: "{{ angular_build_dir }}"
+        dest: "{{ nginx_web_root }}"
+        remote_src: true
+        owner: www-data
+        group: www-data
+        mode: 0755
+
+    - name: Create Nginx site configuration
+      template:
+        src: "roles/nginx/templates/parlor-site.conf.j2"
+        dest: "{{ nginx_site_config }}"
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - restart nginx
+
+    - name: Enable Nginx site configuration
+      file:
+        src: "{{ nginx_site_config }}"
+        dest: "/etc/nginx/sites-enabled/parlor-app"
+        state: link
+      notify:
+        - restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

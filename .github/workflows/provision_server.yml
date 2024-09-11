@@ -1,0 +1,29 @@
+name: Provision Server
+
+on: workflow_dispatch
+jobs:
+  provision-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+
+      - name: Run Ansible Playbook
+        run: |
+          mkdir -p ~/.ssh/
+          touch ~/.ssh/known_hosts
+          cd infrastructure/ansible
+          ssh-keygen -R ${{ secrets.HOST }}
+          ssh-keyscan -t ecdsa, ed25519-H ${{ secrets.HOST }} >> ~/.ssh/known_hosts 2>&1
+          ansible-playbook setup.yml

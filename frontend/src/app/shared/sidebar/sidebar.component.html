@@ -1,0 +1,64 @@
+
+
+<div class="wrapper" style="margin-top: -20px;">
+  <div class="hold-transition sidebar-mini" style="margin-left: -40px !important;">
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-link">
+        <!-- <img src="../../assets/dist/img/homey.png" alt="Home Logo" class="brand-image" > -->
+        <span class="brand-text font-weight-bold"><span class="text-success">Parlor</span>Pro</span>
+      </a>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <!-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="../../assets/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          </div>
+          <div class="info">
+            <a href="#" class="d-block">Alexander Pierce</a>
+          </div>
+        </div> -->
+
+        <!-- SidebarSearch Form -->
+        <!-- <div class="form-inline">
+          <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-sidebar">
+                <i class="fas fa-search fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->
+
+
+                 @for (item of  navLinks; track $index) {
+
+                  <li class="nav-item" [ngClass]="activeTab(item.link) ? 'active' : ''">
+                    <a [routerLink]="item.link"  class="nav-link">
+                      <i [class]="item.icon"></i>
+                      <p>
+                       {{item.name}}
+                      </p>
+                    </a>
+
+                  </li>
+                 }
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
+
+  </div>
+  </div>

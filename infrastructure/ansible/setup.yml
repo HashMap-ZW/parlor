@@ -1,0 +1,35 @@
+---
+- name: Parlor Server Initial Setup
+  hosts: parlor
+  become: true
+  vars:
+    ansible_port: 22
+    sys_packages:
+      [
+        "curl",
+        "git",
+        "gnupg",
+        "ufw",
+        "ca-certificates",
+        "libc6",
+        "libgcc-s1",
+        "liblttng-ust1",
+        "libssl3",
+        "libstdc++6",
+        "libunwind8",
+        "zlib1g",
+      ]
+
+  roles:
+    - common
+    - security
+    - docker
+    - dotnet
+    - mssql
+    - nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: reloaded

@@ -1,0 +1,10 @@
+---
+- name: Update package cache
+  apt:
+    update_cache: yes
+    state: latest
+
+- name: Install required system sys_packages
+  apt:
+    name: "{{sys_packages}}"
+    state: "present"
