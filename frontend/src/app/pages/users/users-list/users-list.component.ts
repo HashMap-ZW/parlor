@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, type OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserDto, isUserDTOValid } from '../../../../_models/user-dto';
-import { UserService } from '../../../../_services/user.service';
+import { UserDto, isUserDTOValid } from '../../../tools/models/user-dto';
+import { UserService } from '../../../tools/services/user.service'; 
 
 
 
