@@ -122,7 +122,7 @@ jobs:
 
       - name: Deploy Parlor Backend
         run: |
-          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && tar -xzf backend_assets.tar.gz && pkill -f "dotnet" || true
+          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && tar -xzf backend_assets.tar.gz && pkill -f "dotnet" || true'
 
       - name: Start the backend
         run: |
