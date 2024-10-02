@@ -127,9 +127,9 @@ jobs:
       - name: Start the backend
         run: |
           ssh devserver 'PID=$(ps aux | grep "dotnet Parlor.API.dll" | grep -v grep | awk "{print \$2}") && [ -n "$PID" ] && kill $PID || true'
-          ssh devserver 'cd ~/parlor_app/backend/Parlor.API nohup dotnet Parlor.API.dll > log.txt 2>&1 &'
+          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && nohup dotnet Parlor.API.dll > log.txt 2>&1 &'
 
       - name: Check if the backend is running
         run: |
-          ssh devserver 'ps aux | grep "dotnet"'
+          ssh devserver 'ps aux | grep "dotnet" | grep -v grep'
           ssh devserver 'cat ~/parlor_app/backend/Parlor.API/log.txt'
