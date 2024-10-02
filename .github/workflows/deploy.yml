@@ -1,10 +1,11 @@
 name: Deploy to VPS
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
 
-# push:
-#   branches:
-#     - main
+  workflow_dispatch:
 
 jobs:
   deploy_frontend:
