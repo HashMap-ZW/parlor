@@ -123,5 +123,5 @@ jobs:
       - name: Deploy Parlor Backend
         run: |
           ssh devserver 'cd ~/parlor_app/backend/Parlor.API && tar -xzf backend_assets.tar.gz'
-          ssh devserver 'pkill -f "dotnet Parlor.API.dll" || true'
+          ssh devserver 'pkill -f "dotnet" || true'
           ssh devserver 'nohup dotnet ~/parlor_app/backend/Parlor.API/Parlor.API.dll > ~/parlor_app/backend/Parlor.API/log.txt 2>&1 &'
