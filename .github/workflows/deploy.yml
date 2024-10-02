@@ -126,7 +126,7 @@ jobs:
 
       - name: Start the backend
         run: |
-          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && pkill -f dotnet || true'
+          ssh devserver 'pkill -f dotnet || true'
           ssh devserver 'cd ~/parlor_app/backend/Parlor.API nohup dotnet Parlor.API.dll > log.txt 2>&1 &'
 
       - name: Check if the backend is running
