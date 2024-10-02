@@ -120,12 +120,13 @@ jobs:
       - name: Copy build artifact to VPS
         run: scp backend_assets.tar.gz devserver:~/parlor_app/backend/Parlor.API
 
-      - name: Deploy Parlor Backend
+      - name: Extract Parlor Backend
         run: |
-          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && tar -xzf backend_assets.tar.gz && pkill -f "dotnet" || true'
+          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && tar -xzf backend_assets.tar.gz'
 
       - name: Start the backend
         run: |
+          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && pkill -f "dotnet"'
           ssh devserver 'cd ~/parlor_app/backend/Parlor.API nohup dotnet Parlor.API.dll > log.txt 2>&1 &'
 
       - name: Check if the backend is running
