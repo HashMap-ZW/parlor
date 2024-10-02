@@ -5,8 +5,10 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 jobs:
-  deploy:
+  deploy_frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -68,3 +70,58 @@ jobs:
 
           ssh devserver 'sudo rm -r /var/www/html/parlor/* || true && sudo cp -r ~/parlor_app/frontend/dist/parlor-fe/browser/* /var/www/html/parlor/'
           ssh devserver 'sudo nginx -s reload'
+
+  deploy_backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Build .NET Core Application
+        run: dotnet build --configuration Release
+        working-directory: ./backend/Parlor.API
+
+      - name: Publish .NET Core Application
+        run: dotnet publish --configuration Release --output ./parlor_backend_assets
+        working-directory: ./backend/Parlor.API
+
+      - name: Test .NET Core Application
+        run: dotnet test
+        working-directory: ./backend/Parlor.API
+
+      - name: Archive build artifact
+        run: tar -czf backend_assets.tar.gz -C ./backend/Parlor.API/parlor_backend_assets .
+
+      - name: Store artifact to copy to VPS
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend_assets
+          path: backend_assets.tar.gz
+
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/ed_25519
+          chmod 600 ~/.ssh/ed_25519
+          ssh-keyscan -t ed25519 ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          cat >>~/.ssh/config <<END
+          Host devserver
+            HostName ${{ secrets.HOST }}
+            User ${{ secrets.USER }}
+            IdentityFile ~/.ssh/ed_25519
+          END
+
+      - name: Copy build artifact to VPS
+        run: scp backend_assets.tar.gz devserver:~/parlor_app/backend/Parlor.API
+
+      - name: Deploy Parlor Backend
+        run: |
+          ssh devserver 'cd ~/parlor_app/backend/Parlor.API && tar -xzf backend_assets.tar.gz'
+          ssh devserver 'pkill -f "dotnet Parlor.API.dll" || true'
+          ssh devserver 'nohup dotnet ~/parlor_app/backend/Parlor.API/Parlor.API.dll > ~/parlor_app/backend/Parlor.API/log.txt 2>&1 &'
