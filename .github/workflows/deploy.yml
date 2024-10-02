@@ -124,10 +124,12 @@ jobs:
         run: |
           ssh devserver 'cd ~/parlor_app/backend/Parlor.API && tar -xzf backend_assets.tar.gz'
 
-      - name: Restart the backend
+      - name: Stop the .NET running process
         run: |
           ssh devserver 'PID=$(ps aux | grep "dotnet Parlor.API.dll" | grep -v grep | awk "{print \$2}") && [ -n "$PID" ] && kill $PID || true'
-          # ssh devserver 'cd ~/parlor_app/backend/Parlor.API && nohup dotnet Parlor.API.dll > log.txt 2>&1 &'
+
+      - name: Restart the backend
+        run: ssh devserver 'cd ~/parlor_app/backend/Parlor.API && nohup dotnet Parlor.API.dll > log.txt 2>&1 &'
 
       - name: Check if the backend is running
         run: |
